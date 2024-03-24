@@ -23,11 +23,12 @@ app.use(cors({
 
 /* ROUTES */
 
-app.get("/", (req, res) => res.json(db));
+app.get("/", (req, res) => res.json({ message: "Welcome to the score API" }));
 // INDEX
-app.get('/api/score', async (req, res) => {
+app.get('/api/score/:difficulty', async (req, res) => {
     try {
-        const scores = await Score.find({})
+        const scores = await Score.find({ difficulty: req.params.difficulty })
+        scores.sort((a, b) => b.score - a.score);
         console.log(scores); 
         res.status(200).json(scores)
     } catch (error) {
@@ -36,11 +37,12 @@ app.get('/api/score', async (req, res) => {
 })
 
 // POST
-app.post('/api/score', async (req, res) => {
+app.post('/api/score/:difficulty', async (req, res) => {
     try {
         const score = await Score.create({
             name: req.body.name,
             score: req.body.score,
+            difficulty: req.body.difficulty,
             date: req.body.date
         })
         console.log(`Score = ${score}`); 
@@ -51,9 +53,9 @@ app.post('/api/score', async (req, res) => {
 })
 
 // DESTROY
-app.delete('/api/score', async (req, res) => {
+app.delete('/api/score/:difficulty', async (req, res) => {
     try {
-        const scores = await Score.find({})
+        const scores = await Score.find({ difficulty: req.params.difficulty })
         scores.sort((a, b) => b.score - a.score);
         console.log(scores)
         const lowestScore = scores[scores.length-1]
