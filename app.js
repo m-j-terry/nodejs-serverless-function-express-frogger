@@ -18,7 +18,7 @@ app.use(express.json());
 express.urlencoded({ extended: true })
 
 app.use(cors({
-    origin: 'https://m-j-terry.github.io/unit-1-project'
+    origin: 'https://m-j-terry.github.io'
 }));
 
 /* ROUTES */
